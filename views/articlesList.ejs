@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>New Post</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://use.fontawesome.com/250c8a1e25.js"></script>
+	<style>
+		body {
+			padding-top: 20px;
+			padding-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+
+<div class="container">
+
+<%- include('partials/navbar') %>
+
+	<ul class="articles">
+		<% for(var i = 0; i<articles.length; i++) { %>
+			<li class="article">
+				<span class="fa fa-chrome">Articles Title: <%= articles[i].postTitle %></span><br>
+				<span class="fa fa-commenting">Article text: <%= articles[i].message %></span><hr><br><br>
+			</li>
+		<% } %>
+	</ul>
+
+
+
+<%- include('partials/footer') %>
+</div>
+
+</body>
+</html>

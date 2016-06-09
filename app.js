@@ -1,12 +1,28 @@
 const express = require('express');
 const morgan = require('morgan');
 const favicon = require('serve-favicon');
+const bodyParser = require('body-parser');
+const MongoClient = require('mongodb').MongoClient;
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(morgan('dev'));
 app.use(favicon(__dirname + '/views/favicon.ico'));
+app.use(bodyParser.urlencoded({extended : true}));
+
+MongoClient.connect('mongodb://dushan:marvel123@ds011734.mlab.com:11734/blog-node',(err, database) => {
+	//start dushan marvel123
+	if(err) return console.log(err);
+
+	db = database;
+
+	app.listen(PORT, () => {
+	console.log('Server started on port:',PORT);
+});
+
+});
 
 // fake posts
 const posts = [
@@ -65,12 +81,29 @@ res.render('post', {
 });
 });
 
-
+// Create new post
 app.get('/newpost', (req, res) => {
 	res.render('newPost');
 });
 
+app.post('/newpost', (req, res) => {
+	db.collection('articles').save(req.body, (err, result) => {
+		if(err) return console.log(err);
 
-app.listen(PORT, () => {
-	console.log('server started on port:',PORT);
+		console.log('Saved to the database!');
+		res.redirect('/');
+	});
+
+	console.log(req.body);
+});
+
+// List of Articles
+app.get('/articles', (req, res) => {
+
+	db.collection('articles').find().toArray(function(err, results) {
+		if(err) return console.log(err);
+
+		res.render('articlesList', {articles : results});
+	});
+	
 });
