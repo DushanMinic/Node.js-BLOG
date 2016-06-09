@@ -1,8 +1,9 @@
 const express = require('express');
-const app = express();
-
 const morgan = require('morgan');
 const favicon = require('serve-favicon');
+
+const app = express();
+const PORT = process.env.PORT || 8080;
 
 app.use(morgan('dev'));
 app.use(favicon(__dirname + '/views/favicon.ico'));
@@ -65,6 +66,11 @@ res.render('post', {
 });
 
 
-app.listen(8080, () => {
-	console.log('server started on port 8080');
+app.get('/newpost', (req, res) => {
+	res.render('newPost');
+});
+
+
+app.listen(PORT, () => {
+	console.log('server started on port:',PORT);
 });
