@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId; 
 
 
 const app = express();
@@ -60,31 +61,48 @@ const posts = [
 app.set('view engine', 'ejs');
 
 
+
+
 //homepage
 app.get('/', (req, res) => {
-	res.render('home', { posts: posts}); //render 'home.ejs' with the list of posts
+	//res.render('home', { posts: posts}); //render 'home.ejs' with the list of posts
+
+	db.collection('articles').find().toArray(function(err, results) {
+		if(err) return console.log(err);
+
+		res.render('home', {articles : results});
+		
+	});
+
 });
 
 //blog post
 app.get('/post/:id', (req, res) => {
-	//find the post in the 'posts' array
-	const post = posts.filter((post) => {
-		return post.id == req.params.id;
-	})[0]; //[0]; 
+
+// 	// find the post in the 'posts' array
+
+	db.collection('articles').find({ _id : new ObjectId(req.params.id) }).toArray(function(err, results) {
+		if(err) return console.log(err);
+		
+		const post = results[0];
+	// 	 // render the 'posts.ejs' template with the post content
+		res.render('post', {
+			author: post.author,
+			title: post.postTitle,
+			body: post.message
+		});
+		
+	});
 
 
-	//render the 'posts.ejs' template with the post content
-res.render('post', {
-	author: post.author,
-	title: post.title,
-	body: post.body
 });
-});
 
-// Create new post
+
 app.get('/newpost', (req, res) => {
 	res.render('newPost');
 });
+
+//Create new post
 
 app.post('/newpost', (req, res) => {
 	db.collection('articles').save(req.body, (err, result) => {

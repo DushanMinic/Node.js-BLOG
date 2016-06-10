@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<div class="container">
+<!-- <div class="container">
 
 <%- include('partials/navbar') %>
 
@@ -30,7 +30,36 @@
 
 
 <%- include('partials/footer') %>
-</div>
+</div> -->
+
+<!-- ******************************* -->
+
+<div class="container">
+		<%- include('partials/navbar') %>
+		<div class="jumbotron">
+			<h1>Svi clanci</h1>
+			<p class="lead">Vesti iz Sirbistana i sveta!</p>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3">
+				<div class="list-group">
+				<!-- loop over blog posts and render them -->
+					<% for(var i=0; i<articles.length; i++) { %>
+					<a href="/post/<%= articles[i]._id %>" class="list-group-item"> 
+						
+						<h4 class="list-group-item-heading"><%= articles[i].postTitle %></h4>
+						<p class="list-group-item-text">Poruka: <%= articles[i].message %></p>
+						<p class="list-group-item-text">Autor: <%= articles[i].author %></p>
+					</a>
+					<% } %>
+				</div>
+			</div>
+		</div>
+		<%- include('partials/footer') %>
+	</div>
+
+
 
 </body>
 </html>
